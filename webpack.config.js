@@ -1,4 +1,5 @@
-const path = require("path");
+const path = require("path"); // añadimos la ruta del js
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js", // Le decimos cual es nuetro punto de entrada
@@ -21,4 +22,11 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "./public/index.html", // pasamor el archivo de ntrada
+      filename: "./index.html", // pasamos el archivo de salida
+    }),
+  ],
 };
