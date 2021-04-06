@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"), //ruta del archivo preparado
     filename: "main.js", // nombre del archivo resultante
+    assetModuleFilename: "assets/images/[hash][ext][query]",
   },
   resolve: {
     extensions: [".js"], // establecemos las extenciones con las que vamos atrabajar en nuestro proyecto.
@@ -29,6 +30,20 @@ module.exports = {
       {
         test: /\.png/,
         type: "asset/resource",
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        use: {
+          loader: "url-loader",
+          options: {
+            limit: 10000,
+            mimetype: "aplication/font-woff",
+            name: "[name].[ext]",
+            outputPath: "./assets/fonts/",
+            publicPath: "./assets/fonts/",
+            esModule: false,
+          },
+        },
       },
     ],
   },
