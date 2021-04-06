@@ -1,33 +1,38 @@
-const path = require("path"); // añadimos la ruta del js
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssEtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js", // Le decimos cual es nuetro punto de entrada
+  entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "dist"), //ruta del archivo preparado
-    filename: "[name].[contenthash].js", // nombre del archivo resultante
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[contenthash].js",
     assetModuleFilename: "assets/images/[hash][ext][query]",
   },
   resolve: {
-    extensions: [".js"], // establecemos las extenciones con las que vamos atrabajar en nuestro proyecto.
+    extensions: [".js"],
+    alias: {
+      "@utils": path.resolve(__dirname, "src/utils/"),
+      "@templates": path.resolve(__dirname, "src/templates/"),
+      "@styles": path.resolve(__dirname, "src/styles/"),
+      "@images": path.resolve(__dirname, "src/assets/images/"),
+    },
   },
   module: {
     rules: [
-      // establecemos reglas
       {
         test: /\.m?js$/,
-        exclude: /node_modules/, // le pasamos que use nada de modules
+        exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
       },
       {
-        test: /\.css|\.styl$/i,
-        use: [MiniCssEtractPlugin.loader, "css-loader", "stylus-loader"],
+        test: /\.css|.styl$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"],
       },
       {
         test: /\.png/,
@@ -39,10 +44,10 @@ module.exports = {
           loader: "url-loader",
           options: {
             limit: 10000,
-            mimetype: "aplication/font-woff",
+            mimetype: "application/font-woff",
             name: "[name].[contenthash].[ext]",
             outputPath: "./assets/fonts/",
-            publicPath: "./assets/fonts/",
+            publicPath: "../assets/fonts/",
             esModule: false,
           },
         },
@@ -52,18 +57,17 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
-      template: "./public/index.html", // pasamor el archivo de ntrada
-      filename: "./index.html", // pasamos el archivo de salida
+      template: "./public/index.html",
+      filename: "./index.html",
     }),
-    new MiniCssEtractPlugin({
+    new MiniCssExtractPlugin({
       filename: "assets/[name].[contenthash].css",
     }),
     new CopyPlugin({
       patterns: [
-        // pasamos desde donde hacia donde se moveran los file
         {
-          from: path.resolve(__dirname, "src", "assets/images"), //desde donde
-          to: "assets/images", //hacia donde
+          from: path.resolve(__dirname, "src", "assets/images"),
+          to: "assets/images",
         },
       ],
     }),
