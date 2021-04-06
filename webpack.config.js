@@ -1,6 +1,7 @@
 const path = require("path"); // añadimos la ruta del js
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssEtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js", // Le decimos cual es nuetro punto de entrada
@@ -34,5 +35,14 @@ module.exports = {
       filename: "./index.html", // pasamos el archivo de salida
     }),
     new MiniCssEtractPlugin(),
+    new CopyPlugin({
+      patterns: [
+        // pasamos desde donde hacia donde se moveran los file
+        {
+          from: path.resolve(__dirname, "src", "assets/images"), //desde donde
+          to: "assets/images", //hacia donde
+        },
+      ],
+    }),
   ],
 };
