@@ -2,12 +2,14 @@ const path = require("path"); // añadimos la ruta del js
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssEtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js", // Le decimos cual es nuetro punto de entrada
   output: {
     path: path.resolve(__dirname, "dist"), //ruta del archivo preparado
-    filename: "main.js", // nombre del archivo resultante
+    filename: "[name].[contenthash].js", // nombre del archivo resultante
     assetModuleFilename: "assets/images/[hash][ext][query]",
   },
   resolve: {
@@ -38,7 +40,7 @@ module.exports = {
           options: {
             limit: 10000,
             mimetype: "aplication/font-woff",
-            name: "[name].[ext]",
+            name: "[name].[contenthash].[ext]",
             outputPath: "./assets/fonts/",
             publicPath: "./assets/fonts/",
             esModule: false,
@@ -53,7 +55,9 @@ module.exports = {
       template: "./public/index.html", // pasamor el archivo de ntrada
       filename: "./index.html", // pasamos el archivo de salida
     }),
-    new MiniCssEtractPlugin(),
+    new MiniCssEtractPlugin({
+      filename: "assets/[name].[contenthash].css",
+    }),
     new CopyPlugin({
       patterns: [
         // pasamos desde donde hacia donde se moveran los file
@@ -64,4 +68,8 @@ module.exports = {
       ],
     }),
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
+  },
 };
